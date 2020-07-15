@@ -31,7 +31,7 @@
 # Application Name
 # The name of the application to use in the help text
 # ==============================================================================
-config :app_name, default: ENV.fetch('FLIGHT_PROGRAM_NAME', 'flight asset')
+config :app_name, default: ENV.fetch('FLIGHT_PROGRAM_NAME', 'bin/howto')
 
 # ==============================================================================
 # Howto Dir
@@ -44,7 +44,7 @@ config :howto_dir, default: File.join(flight_ROOT, 'etc/howto')
 # The file the logger will write to. It will write to standard error when set to
 # empty string.
 # ==============================================================================
-config :log_path, default: "#{xdg.cache_home}/flight/log/share/fact.log",
+config :log_path, default: File.join(xdg.cache_home, "flight/log/share/howto.log"),
                   required: false
 
 # ==============================================================================

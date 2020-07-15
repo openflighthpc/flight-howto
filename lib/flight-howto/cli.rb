@@ -57,6 +57,26 @@ module FlightHowto
       end
     end
 
+    create_command 'list' do |c|
+      c.summary = 'Return all the known how-to guides'
+    end
+
+    create_command 'show', 'NAME_OR_FUZZY' do |c|
+      c.summary = 'Search and display a how-to guide'
+      c.description = <<~DESC.chomp
+        Search for a how-to guide by it's name or close approximation.
+        Exact name matches are recommended in order to gaurantee a particular
+        guide is returned.
+
+        Failing an exact match, a close approximation shall be used instead.
+        This should yield the expect guide if the search name is similar to the
+        target. For example, NAME_OR_FUZZY could be:
+         * The leading prefix to the guide,
+         * A key word within the guide's name, or
+         * A minor typo in the spelling.
+      DESC
+    end
+
     if Config::CACHE.development?
       create_command 'console' do |c|
         c.action do
