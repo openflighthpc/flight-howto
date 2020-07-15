@@ -37,7 +37,7 @@ module FlightHowto
 
     program :name, Config::CACHE.app_name
     program :version, "v#{FlightHowto::VERSION}"
-    program :description, '%DESCRIPTION%'
+    program :description, 'View useful guides on how to use the flight utility'
     program :help_paging, false
     default_command :help
 
