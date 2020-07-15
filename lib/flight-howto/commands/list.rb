@@ -29,7 +29,7 @@ module FlightHowto
   module Commands
     class List < Command
       def run
-        howtos = fetch_howtos
+        howtos = fetch_howtos.sort
         if howtos.empty?
           $stderr.puts 'No guides found!'
         else
