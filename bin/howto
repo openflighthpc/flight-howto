@@ -28,7 +28,6 @@
 
 begin
   Dir.chdir(ENV.fetch('FLIGHT_CWD','.'))
-  OpenFlight.set_standard_env rescue nil
   ENV['BUNDLE_GEMFILE'] ||= File.join(__dir__, '../Gemfile')
 
   require 'rubygems'

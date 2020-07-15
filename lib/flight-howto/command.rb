@@ -30,18 +30,36 @@ module FlightHowto
   class Command
     attr_accessor :args, :options
 
-    def initialize(args, opts)
+    def initialize(*args, **opts)
       @args = args.freeze
       @options = OpenStruct.new(opts)
     end
 
-    # this wrapper is here to later enable error handling &/ logging
     def run!
+      Config::CACHE.logger.info "Running: #{self.class}"
       run
+      Config::CACHE.logger.info 'Exited: 0'
+    rescue => e
+      if e.respond_to? :exit_code
+        Config::CACHE.logger.fatal "Exited: #{e.exit_code}"
+      else
+        Config::CACHE.logger.fatal 'Exited non-zero'
+      end
+      Config::CACHE.logger.debug e.backtrace.reverse.join("\n")
+      Config::CACHE.logger.error "(#{e.class}) #{e.message}"
+      raise e
     end
 
     def run
       raise NotImplementedError
+    end
+
+    def fetch_howtos
+      dir = Config::CACHE.howto_dir
+      Dir.glob(File.expand_path('*\.md', dir))
+         .map do |path|
+        File.basename(path.sub(dir, ''), '.*')
+      end
     end
   end
 end

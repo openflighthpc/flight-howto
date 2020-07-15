@@ -49,7 +49,6 @@ module FlightHowto
         c.hidden = true if name.split.length > 1
 
         c.action do |args, opts|
-          require_relative '../flight_asset'
           Commands.build(name, *args, **opts.to_h).run!
         end
 

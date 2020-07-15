@@ -24,13 +24,17 @@
 # For more information on FlightHowto, please visit:
 # https://github.com/openflighthpc/flight-howto
 #==============================================================================
-require_relative '../command'
 
 module FlightHowto
   module Commands
-    class Hello < Command
+    class List < Command
       def run
-        puts "Hello, FlightHowto"
+        howtos = fetch_howtos
+        if howtos.empty?
+          $stderr.puts 'No guides found!'
+        else
+          puts howtos
+        end
       end
     end
   end
