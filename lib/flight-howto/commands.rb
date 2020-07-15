@@ -25,6 +25,8 @@
 # https://github.com/openflighthpc/flight-howto
 #==============================================================================
 
+require_relative 'command'
+
 module FlightHowto
   module Commands
     def self.constantize(sym)

@@ -27,8 +27,8 @@
 #==============================================================================
 
 begin
-  lib_dir = File.expand_path(File.join(__dir__, '../lib'))
-  $LOAD_PATH.unshift(lib_dir)
+  Dir.chdir(ENV.fetch('FLIGHT_CWD','.'))
+  OpenFlight.set_standard_env rescue nil
   ENV['BUNDLE_GEMFILE'] ||= File.join(__dir__, '../Gemfile')
 
   require 'rubygems'
@@ -36,11 +36,22 @@ begin
 
   Bundler.setup(:default)
 
-  require 'flight-howto/cli'
+  require_relative '../lib/flight-howto/config'
 
-  OpenFlight.set_standard_env rescue nil
-  Dir.chdir(ENV.fetch('FLIGHT_CWD','.'))
-  FlightHowto::CLI.run!
+  if FlightHowto::Config::CACHE.development?
+    begin
+      Bundler.setup(:default, :development)
+      require 'pry'
+      require 'pry-byebug'
+    rescue StandardError, LoadError
+      Bundler.setup(:default)
+      $stderr.puts 'An error occurred when enabling development mode!'
+    end
+  end
+
+  require_relative '../lib/flight-howto/cli'
+
+  FlightHowto::CLI.run!(*ARGV)
 rescue Interrupt
   if Kernel.const_defined?(:Paint)
     $stderr.puts "\n#{Paint['WARNING', :underline, :yellow]}: Cancelled by user"

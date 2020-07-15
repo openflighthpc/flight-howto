@@ -33,9 +33,7 @@ module FlightHowto
   module CLI
     extend Commander::CLI
 
-    PROGRAM_NAME = 'flight howto'
-
-    program :name, PROGRAM_NAME
+    program :name, Config::CACHE.app_name
     program :version, "v#{FlightHowto::VERSION}"
     program :description, '%DESCRIPTION%'
     program :help_paging, false
@@ -45,24 +43,26 @@ module FlightHowto
       Paint.mode = 0
     end
 
-    class << self
-      def cli_syntax(command, args_str = nil)
-        command.syntax = [
-          PROGRAM_NAME,
-          command.name,
-          args_str
-        ].compact.join(' ')
+    def self.create_command(name, args_str = '')
+      command(name) do |c|
+        c.syntax = "#{program :name} #{name} #{args_str}"
+        c.hidden = true if name.split.length > 1
+
+        c.action do |args, opts|
+          require_relative '../flight_asset'
+          Commands.build(name, *args, **opts.to_h).run!
+        end
+
+        yield c if block_given?
       end
     end
 
-    command :hello do |c|
-      cli_syntax(c)
-      c.summary = 'Say hello'
-      c.action Commands, :hello
-      c.description = <<EOF
-Say hello.
-EOF
+    if Config::CACHE.development?
+      create_command 'console' do |c|
+        c.action do
+          FlightHowto::Command.new([], {}).instance_exec { binding.pry }
+        end
+      end
     end
-    alias_command :h, :hello
   end
 end

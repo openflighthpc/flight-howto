@@ -30,9 +30,9 @@ module FlightHowto
   class Command
     attr_accessor :args, :options
 
-    def initialize(args, options, command_name = nil)
+    def initialize(args, opts)
       @args = args.freeze
-      @options = OpenStruct.new(options.__hash__)
+      @options = OpenStruct.new(opts)
     end
 
     # this wrapper is here to later enable error handling &/ logging

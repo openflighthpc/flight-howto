@@ -72,6 +72,10 @@ module FlightHowto
       @xdg ||= XDG::Environment.new
     end
 
+    def self.flight_ROOT
+      ENV.fetch('flight_ROOT') { File.expand_path('../../var/flight', __dir__) }
+    end
+
     def self.load_reference(path)
       self.instance_eval(File.read(path), path, 0) if File.exists?(path)
     end
@@ -127,7 +131,7 @@ module FlightHowto
     data = File.read(CONFIG_PATH)
     Config.new(YAML.load(data, symbolize_names: true)).tap do |c|
       c.logger.info "Loaded Config: #{CONFIG_PATH}"
-      c.logger.debug data.gsub(/(?<=jwt)\s*:[^\n]*/, ': REDACTED')
+      c.logger.debug data
     end
   else
     Config.new({}).tap do |c|
