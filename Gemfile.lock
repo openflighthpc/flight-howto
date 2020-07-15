@@ -1,0 +1,28 @@
+GIT
+  remote: https://github.com/bkuhlmann/xdg
+  revision: f7a494bfde77a4eca596f5b1930e06831c27ebb7
+  specs:
+    xdg (4.1.0)
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    commander-openflighthpc (2.1.2)
+      highline (> 1.7.2)
+      paint (~> 2.1.0)
+      slop (~> 4.8)
+    hashie (4.1.0)
+    highline (2.0.3)
+    paint (2.1.1)
+    slop (4.8.2)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  commander-openflighthpc (~> 2)
+  hashie
+  xdg!
+
+BUNDLED WITH
+   2.1.4
