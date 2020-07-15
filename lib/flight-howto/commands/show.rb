@@ -1,4 +1,3 @@
-# frozen_string_literal: true
 #==============================================================================
 # Copyright (C) 2020-present Alces Flight Ltd.
 #
@@ -25,14 +24,29 @@
 # For more information on FlightHowto, please visit:
 # https://github.com/openflighthpc/flight-howto
 #==============================================================================
-source 'https://rubygems.org'
 
-gem 'commander-openflighthpc', '~> 2'
-gem 'hashie'
-gem 'fuzzy_match'
-gem 'xdg', git: 'https://github.com/bkuhlmann/xdg'
+require 'fuzzy_match'
 
-group :development do
-  gem 'pry'
-  gem 'pry-byebug'
+module FlightHowto
+  module Commands
+    class Show < Command
+      def run
+        puts resolve_name
+      end
+
+      def fuzzy_name
+        args.first
+      end
+
+      def resolve_name
+        if File.exists? join_howto(fuzzy_name)
+          fuzzy_name
+        elsif match = FuzzyMatch.new(fetch_howtos, read: :to_s).find(fuzzy_name)
+          match
+        else
+          raise MissingError, "Could not resolve guide: #{fuzzy_name}"
+        end
+      end
+    end
+  end
 end

@@ -54,11 +54,13 @@ module FlightHowto
       raise NotImplementedError
     end
 
+    def join_howto(name)
+      File.join(Config::CACHE.howto_dir, "#{name}.md")
+    end
+
     def fetch_howtos
-      dir = Config::CACHE.howto_dir
-      Dir.glob(File.expand_path('*\.md', dir))
-         .map do |path|
-        File.basename(path.sub(dir, ''), '.*')
+      Dir.glob(join_howto('*\\')).map do |path|
+        File.basename(path.sub(Config::CACHE.howto_dir, ''), '.*')
       end
     end
   end
