@@ -26,12 +26,14 @@
 #==============================================================================
 
 require 'fuzzy_match'
+require 'tty-markdown'
+require 'kramdown'
 
 module FlightHowto
   module Commands
     class Show < Command
       def run
-        puts resolve_name
+        puts TTY::Markdown.parse(read_guide)
       end
 
       def fuzzy_name
@@ -48,6 +50,10 @@ module FlightHowto
         else
           raise MissingError, "Could not fuzzy match: #{fuzzy_name}"
         end
+      end
+
+      def read_guide
+        File.read join_howto(resolve_name)
       end
     end
   end

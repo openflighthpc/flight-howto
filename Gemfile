@@ -30,6 +30,7 @@ source 'https://rubygems.org'
 gem 'commander-openflighthpc', '~> 2'
 gem 'hashie'
 gem 'fuzzy_match'
+gem 'tty-markdown'
 gem 'xdg', git: 'https://github.com/bkuhlmann/xdg'
 
 group :development do
