@@ -41,10 +41,12 @@ module FlightHowto
       def resolve_name
         if File.exists? join_howto(fuzzy_name)
           fuzzy_name
+        elsif options.exact
+          raise MissingError, "Could not exactly match: #{fuzzy_name}"
         elsif match = FuzzyMatch.new(fetch_howtos, read: :to_s).find(fuzzy_name)
           match
         else
-          raise MissingError, "Could not resolve guide: #{fuzzy_name}"
+          raise MissingError, "Could not fuzzy match: #{fuzzy_name}"
         end
       end
     end

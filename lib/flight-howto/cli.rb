@@ -24,8 +24,10 @@
 # For more information on FlightHowto, please visit:
 # https://github.com/openflighthpc/flight-howto
 #==============================================================================
+
 require_relative 'commands'
 require_relative 'version'
+require_relative 'errors'
 
 require 'commander'
 
@@ -74,6 +76,7 @@ module FlightHowto
          * A key word within the guide's name, or
          * A minor typo in the spelling.
       DESC
+      c.slop.bool '--exact', 'Require the name to extactly match, disables fuzzy logic'
     end
 
     if Config::CACHE.development?
