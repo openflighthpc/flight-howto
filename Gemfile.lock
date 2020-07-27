@@ -12,6 +12,11 @@ GEM
     highline (2.0.3)
     kramdown (1.16.2)
     method_source (1.0.0)
+    necromancer (0.6.0)
+    output_mode (1.0.0)
+      pastel (~> 0.7)
+      tty-color (~> 0.5)
+      tty-table (~> 0.11)
     paint (2.1.1)
     pastel (0.7.4)
       equatable (~> 0.6)
@@ -38,6 +43,12 @@ GEM
       tty-color (~> 0.4)
       tty-screen (~> 0.6)
     tty-screen (0.8.0)
+    tty-table (0.11.0)
+      equatable (~> 0.6)
+      necromancer (~> 0.5)
+      pastel (~> 0.7.2)
+      strings (~> 0.1.5)
+      tty-screen (~> 0.7)
     unicode-display_width (1.7.0)
     unicode_utils (1.4.0)
     xdg (4.2.0)
@@ -48,6 +59,7 @@ PLATFORMS
 DEPENDENCIES
   commander-openflighthpc (~> 2)
   hashie
+  output_mode
   pry
   pry-byebug
   tty-markdown

@@ -29,6 +29,7 @@ source 'https://rubygems.org'
 
 gem 'commander-openflighthpc', '~> 2'
 gem 'hashie'
+gem 'output_mode'
 gem 'tty-markdown'
 gem 'xdg'
 
