@@ -61,23 +61,6 @@ bin/howto show my-guide
 ... displays my-guide ...
 ```
 
-To fuzzy search for a guide:
-
-```
-bin/howto show guide
-... displays my-guide ...
-```
-
-To force an explicit match
-
-```
-bin/howto show my-guide --exact
-... displays my-guide ...
-
-
-bin/howto show guide --exact # errors
-```
-
 # Contributing
 
 Fork the project. Make your feature addition or bug fix. Send a pull
