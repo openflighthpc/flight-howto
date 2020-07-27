@@ -31,6 +31,7 @@ gem 'commander-openflighthpc', '~> 2'
 gem 'hashie'
 gem 'output_mode'
 gem 'tty-markdown'
+gem 'tty-pager'
 gem 'xdg'
 
 group :development do

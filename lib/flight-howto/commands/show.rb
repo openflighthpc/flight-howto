@@ -26,7 +26,7 @@
 #==============================================================================
 
 require 'tty-markdown'
-require 'kramdown'
+require 'tty-pager'
 
 module FlightHowto
   module Commands
@@ -36,7 +36,8 @@ module FlightHowto
         if guides.length == 0
           raise MissingError, "Could not locate: #{args.join(' ')}"
         elsif guides.length == 1
-          puts TTY::Markdown.parse(guides.first.read)
+          guide = guides.first
+          options.no_pager ? (puts guide.read) : guide.page
         else
           msg = ['Could not uniquely identify a guide. Did you mean?']
           guides.each do |guide|

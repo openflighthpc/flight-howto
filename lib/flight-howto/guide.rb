@@ -79,8 +79,17 @@ module FlightHowto
       standard_basename.include? input
     end
 
+    ##
+    # Reads the guides content
     def read
       File.read path
+    end
+
+    ##
+    # Pages the guides content
+    def page
+      ENV['LESS'] ||= '-FRX'
+      TTY::Pager.new.page(read)
     end
   end
 end

@@ -42,6 +42,9 @@ GEM
       strings (~> 0.1.4)
       tty-color (~> 0.4)
       tty-screen (~> 0.6)
+    tty-pager (0.13.0)
+      strings (~> 0.1.8)
+      tty-screen (~> 0.8)
     tty-screen (0.8.0)
     tty-table (0.11.0)
       equatable (~> 0.6)
@@ -63,6 +66,7 @@ DEPENDENCIES
   pry
   pry-byebug
   tty-markdown
+  tty-pager
   xdg
 
 BUNDLED WITH
