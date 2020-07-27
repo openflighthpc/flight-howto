@@ -62,7 +62,7 @@ module FlightHowto
     ##
     # Returns the index associated with the guide
     def index
-      @index ||= /\A\d+/.match(standard_basename).to_a.first.to_i
+      @index ||= /\A\d+/.match(standard_basename).to_a.first
     end
 
     ##
@@ -72,14 +72,6 @@ module FlightHowto
       @humanized_name ||= standard_basename.split('_')[1..-1]
                                            .map(&:capitalize)
                                            .join(' ')
-    end
-
-    ##
-    # Returns true if the input string is a substring of the standard_basename
-    # NOTE: The input should be standardized before matching, otherwise it will
-    # not be case or word boundary invariant
-    def =~(input)
-      standard_basename.include? input
     end
 
     ##

@@ -29,7 +29,7 @@ module FlightHowto
   module Commands
     class Show < Command
       def run
-        guides = fetch_guides.select { |g| g =~ match_name }
+        guides = match_guides
         if guides.length == 0
           raise MissingError, "Could not locate: #{args.join(' ')}"
         elsif guides.length == 1
@@ -44,8 +44,29 @@ module FlightHowto
         end
       end
 
-      def match_name
-        @match_name ||= Guide.standardize_string(args.join('_'))
+      def search_keys
+        @search_keys ||= Guide.standardize_string(args.join('_')).split('_').uniq
+      end
+
+      def search_hash
+        @search_hash ||= search_keys.map { |key| [key, true] }.to_h
+      end
+
+      ##
+      # Select guides who's name contains all the search keys
+      # NOTE: This method ignores order because it is hard to check and does
+      #       not improve the usability
+      def match_guides
+        fetch_guides.select do |guide|
+          # Generate standardized parts of the guide's name
+          parts = guide.standard_basename.split('_')
+
+          # Ignore parts which do not appear in the search_key
+          filtered = parts.select { |p| search_hash[p] }
+
+          # Ensure the filtered key contains all the search keys
+          filtered.uniq.length == search_keys.length
+        end
       end
     end
   end
