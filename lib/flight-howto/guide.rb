@@ -30,6 +30,8 @@ require 'tty-pager'
 
 module FlightHowto
   Guide = Struct.new(:path) do
+    INDEX_REGEX = /\A(?<index>\d+)_(?<rest>.*)\Z/
+
     ##
     # Used to convert strings into a standardized format. This provides case
     # and word boundary invariance. The standardization process will:
@@ -51,11 +53,22 @@ module FlightHowto
     # integer which in term becomes a non-unique index lookup. The
     # "default index" 99_ has been chosen so they always sort last
     #
+    # NOTE: Leading zeros are stripped from the index otherwise the
+    #       user would need to include for the atomic match to work
+    #
     # The file extension is not include in the standardized name
     def standard_basename
       @standard_basename ||= begin
         name = self.class.standardize_string(File.basename(path, '.*'))
-        /\A\d+_/ =~ name ? name : "#{Config::CACHE.default_index}_#{name}"
+        if match = INDEX_REGEX.match(name)
+          # Type casting removes leading 0s
+          id = match.named_captures['index'].to_i
+          rest = match.named_captures['rest']
+          "#{id}_#{rest}"
+        else
+          # Add the default index
+          "#{Config::CACHE.default_index.to_i}_#{name}"
+        end
       end
     end
 
