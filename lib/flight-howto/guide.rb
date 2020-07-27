@@ -25,6 +25,9 @@
 # https://github.com/openflighthpc/flight-howto
 #==============================================================================
 
+require 'tty-markdown'
+require 'tty-pager'
+
 module FlightHowto
   Guide = Struct.new(:path) do
     ##
@@ -86,10 +89,16 @@ module FlightHowto
     end
 
     ##
+    # Renders the markdown
+    def render
+      TTY::Markdown.parse(read)
+    end
+
+    ##
     # Pages the guides content
     def page
       ENV['LESS'] ||= '-FRX'
-      TTY::Pager.new.page(read)
+      TTY::Pager.new.page(render)
     end
   end
 end

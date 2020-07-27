@@ -25,9 +25,6 @@
 # https://github.com/openflighthpc/flight-howto
 #==============================================================================
 
-require 'tty-markdown'
-require 'tty-pager'
-
 module FlightHowto
   module Commands
     class Show < Command
@@ -37,7 +34,7 @@ module FlightHowto
           raise MissingError, "Could not locate: #{args.join(' ')}"
         elsif guides.length == 1
           guide = guides.first
-          options.no_pager ? (puts guide.read) : guide.page
+          options.no_pager ? (puts guide.render) : guide.page
         else
           msg = ['Could not uniquely identify a guide. Did you mean?']
           guides.each do |guide|
