@@ -24,6 +24,9 @@
 # For more information on FlightHowto, please visit:
 # https://github.com/openflighthpc/flight-howto
 #==============================================================================
+
+require_relative 'guide'
+
 require 'ostruct'
 
 module FlightHowto
@@ -58,10 +61,14 @@ module FlightHowto
       File.join(Config::CACHE.howto_dir, "#{name}.md")
     end
 
-    def fetch_howtos
-      Dir.glob(join_howto('*\\')).map do |path|
-        File.basename(path.sub(Config::CACHE.howto_dir, ''), '.*')
-      end
+    def glob_howto_paths
+      Dir.glob(join_howto('*\\')).sort
+    end
+
+    ##
+    # Guides provide a nicer interface to the "howto" basename and pattern matching
+    def fetch_guides
+      glob_howto_paths.map { |p| Guide.new(p) }
     end
   end
 end

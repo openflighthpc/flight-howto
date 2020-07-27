@@ -25,7 +25,6 @@
 # https://github.com/openflighthpc/flight-howto
 #==============================================================================
 
-require 'fuzzy_match'
 require 'tty-markdown'
 require 'kramdown'
 
@@ -33,27 +32,22 @@ module FlightHowto
   module Commands
     class Show < Command
       def run
-        puts TTY::Markdown.parse(read_guide)
-      end
-
-      def fuzzy_name
-        args.first
-      end
-
-      def resolve_name
-        if File.exists? join_howto(fuzzy_name)
-          fuzzy_name
-        elsif options.exact
-          raise MissingError, "Could not exactly match: #{fuzzy_name}"
-        elsif match = FuzzyMatch.new(fetch_howtos, read: :to_s).find(fuzzy_name)
-          match
+        guides = fetch_guides.select { |g| g =~ match_name }
+        if guides.length == 0
+          raise MissingError, "Could not locate: #{args.join(' ')}"
+        elsif guides.length == 1
+          puts TTY::Markdown.parse(guides.first.read)
         else
-          raise MissingError, "Could not fuzzy match: #{fuzzy_name}"
+          msg = ['Could not uniquely identify a guide. Did you mean?']
+          guides.each do |guide|
+            msg << "#{guide.index} #{guide.humanized_name}"
+          end
+          raise MissingError, msg.join("\n")
         end
       end
 
-      def read_guide
-        File.read join_howto(resolve_name)
+      def match_name
+        @match_name ||= Guide.standardize_string(args.join('_'))
       end
     end
   end

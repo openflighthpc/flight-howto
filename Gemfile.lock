@@ -1,9 +1,3 @@
-GIT
-  remote: https://github.com/bkuhlmann/xdg
-  revision: f7a494bfde77a4eca596f5b1930e06831c27ebb7
-  specs:
-    xdg (4.1.0)
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -14,7 +8,6 @@ GEM
       paint (~> 2.1.0)
       slop (~> 4.8)
     equatable (0.6.1)
-    fuzzy_match (2.1.0)
     hashie (4.1.0)
     highline (2.0.3)
     kramdown (1.16.2)
@@ -47,19 +40,18 @@ GEM
     tty-screen (0.8.0)
     unicode-display_width (1.7.0)
     unicode_utils (1.4.0)
+    xdg (4.2.0)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
   commander-openflighthpc (~> 2)
-  fuzzy_match
   hashie
-  kramdown
   pry
   pry-byebug
   tty-markdown
-  xdg!
+  xdg
 
 BUNDLED WITH
    2.1.4

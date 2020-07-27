@@ -29,11 +29,13 @@ module FlightHowto
   module Commands
     class List < Command
       def run
-        howtos = fetch_howtos.sort
-        if howtos.empty?
+        guides = fetch_guides
+        if guides.empty?
           $stderr.puts 'No guides found!'
         else
-          puts howtos
+          guides.each do |guide|
+            puts "#{guide.index} #{guide.humanized_name}"
+          end
         end
       end
     end

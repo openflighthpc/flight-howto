@@ -40,6 +40,22 @@ config :app_name, default: ENV.fetch('FLIGHT_PROGRAM_NAME', 'bin/howto')
 config :howto_dir, default: File.join(flight_ROOT, 'etc/howto')
 
 # ==============================================================================
+# Default Index
+# The howto system is index based without enforcing uniqueness. Whether the
+# index can be considered unique entirely depends on the content.
+#
+# In practice, all howto guides should be prefixed with 'XX_' where XX is a
+# unique identifier. This will allow the users to match on it alone.
+#
+# However as 'XX_' is not assumed to be unique, it can be duplicated between
+# guides. This in effect disables index matching for those particular guides.
+# This allows all "un-indexed" guides to be grouped together under a
+# "default index". It will not uniquely define the guide, but it can be used as
+# a search parameter.
+# ==============================================================================
+config :default_index, default: 99
+
+# ==============================================================================
 # Log Path
 # The file the logger will write to. It will write to standard error when set to
 # empty string.
