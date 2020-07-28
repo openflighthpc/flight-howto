@@ -59,7 +59,7 @@ module FlightHowto
     end
 
     create_command 'list' do |c|
-      c.summary = 'Return all the known how-to guides'
+      c.summary = 'List available guides'
       c.slop.bool '--verbose', 'Display additional information about each guide'
     end
 

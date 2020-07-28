@@ -63,6 +63,7 @@ DEPENDENCIES
   commander-openflighthpc (~> 2)
   hashie
   output_mode
+  pastel
   pry
   pry-byebug
   tty-markdown
