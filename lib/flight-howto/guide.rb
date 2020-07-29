@@ -79,7 +79,18 @@ module FlightHowto
     ##
     # Renders the markdown
     def render
-      TTY::Markdown.parse(read)
+      colors = 256
+      content = read.force_encoding('UTF-8')
+      begin
+        TTY::Markdown.parse(content, colors: colors)
+      rescue
+        if colors > 16
+          colors = 16
+          retry
+        end
+        Config::Logger.error "Failed to pretty render: #{path}"
+        content
+      end
     end
   end
 end
