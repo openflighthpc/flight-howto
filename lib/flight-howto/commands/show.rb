@@ -29,8 +29,21 @@ module FlightHowto
   module Commands
     class Show < Command
       def run
+        if options.no_pager
+          puts load_content
+        else
+          ENV['LESS'] ||= '-FRX'
+          TTY::Pager.new.page(load_content)
+        end
+      end
+
+      def load_content
         guide = resolve_guide
-        options.no_pager ? (puts guide.render) : guide.page
+        if $stdout.tty? && !options.no_pretty
+          guide.render
+        else
+          guide.read
+        end
       end
 
       def resolve_guide

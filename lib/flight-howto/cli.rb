@@ -66,6 +66,7 @@ module FlightHowto
     create_command 'show', 'NAME...' do |c|
       c.summary = 'Search and display a how-to guide'
       c.slop.bool '--no-pager', 'Do not use a pager to view the guide', default: false
+      c.slop.bool '--no-pretty', 'Display the guide as raw markdown', default: false
     end
 
     if Config::CACHE.development?

@@ -81,12 +81,5 @@ module FlightHowto
     def render
       TTY::Markdown.parse(read)
     end
-
-    ##
-    # Pages the guides content
-    def page
-      ENV['LESS'] ||= '-FRX'
-      TTY::Pager.new.page(render)
-    end
   end
 end
