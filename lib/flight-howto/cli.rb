@@ -35,6 +35,7 @@ module FlightHowto
   module CLI
     extend Commander::CLI
 
+    program :application, 'Flight How To'
     program :name, Config::CACHE.app_name
     program :version, "v#{FlightHowto::VERSION}"
     program :description, 'View useful guides on how to use the flight utility'
