@@ -26,6 +26,7 @@
 #==============================================================================
 
 require_relative 'matcher'
+require_relative 'lister'
 
 require 'ostruct'
 

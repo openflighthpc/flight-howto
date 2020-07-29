@@ -44,11 +44,10 @@ module FlightHowto
           if guides.length == 1
             guides.first
           elsif guides.length > 1
-            msg = ['Could not uniquely identify a guide. Did you mean?']
-            guides.each do |guide|
-              msg << "#{guide.index} #{guide.humanized_name}"
-            end
-            raise MissingError, msg.join("\n")
+            raise MissingError, <<~ERROR.chomp
+              Could not uniquely identify a guide. Did you mean one of the following?
+              #{Lister.build_output(verbose: false).render(*guides)}
+            ERROR
           else
             raise MissingError, "Could not locate: #{args.join(' ')}"
           end

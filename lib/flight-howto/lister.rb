@@ -30,16 +30,33 @@ require 'pathname'
 require 'pastel'
 
 module FlightHowto
-  module Commands
-    class List < Command
-      def run
-        guides = Matcher.new.guides
-        if guides.empty?
-          $stderr.puts 'No guides found!'
-        else
-          puts Lister.build_output(verbose: options.verbose).render(*guides)
-        end
+  module Lister
+    # Defines a handy interface for generating Tabulated data
+    extend OutputMode::TLDR::Index
+
+    # Defines the columns to the output as a series of blocks
+    # Essentially each "callable" is a proc and a config rolled into a single object
+    register_callable(header: 'Index') do |guide|
+      $stdout.tty? ? pastel.yellow(guide.index) : guide.index
+    end
+    register_callable(header: 'Name') do |guide|
+      if $stdout.tty?
+        pastel.cyan guide.humanized_name
+      else
+        guide.parts.join('_')
       end
+    end
+    register_callable(header: "File (Dir: #{Config::CACHE.howto_dir})", verbose: true) do |guide|
+      if $stdout.tty?
+        Pathname.new(guide.path).relative_path_from Config::CACHE.howto_dir
+      else
+        guide.path
+      end
+    end
+
+    def self.pastel
+      @pastel ||= Pastel.new
     end
   end
 end
+
