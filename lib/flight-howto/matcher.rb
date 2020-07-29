@@ -25,42 +25,49 @@
 # https://github.com/openflighthpc/flight-howto
 #==============================================================================
 
+require_relative 'guide'
+
 module FlightHowto
-  module Commands
-    class Show < Command
-      def run
-        guides = match_guides
-        if guides.length == 0
-          raise MissingError, "Could not locate: #{args.join(' ')}"
-        elsif guides.length == 1
-          guide = guides.first
-          options.no_pager ? (puts guide.render) : guide.page
-        else
-          msg = ['Could not uniquely identify a guide. Did you mean?']
-          guides.each do |guide|
-            msg << "#{guide.index} #{guide.humanized_name}"
-          end
-          raise MissingError, msg.join("\n")
-        end
-      end
+  class Matcher
+    include Enumerable
+    extend  Forwardable
 
-      def search_keys
-        Guide.standardize_string(args.join('_')).split('_').uniq
-      end
+    ##
+    # Helper method for loading in all the guides
+    def self.load_guides
+      Dir.glob(File.join(Config::CACHE.howto_dir, '*\.md'))
+         .map { |p| Guide.new(p) }
+    end
 
-      ##
-      # Select guides who's name contains all the search keys
-      # NOTE: This method ignores order because it is hard to check and does
-      #       not improve the usability
-      def match_guides
-        search_keys.reduce(matcher) do |memo, key|
-          memo.search(key)
-        end.guides
-      end
+    ##
+    # Enumerates over a set of guides
+    attr_reader     :guides
+    def_delegators  :guides, :each
 
-      def matcher
-        @matcher ||= Matcher.new
+    ##
+    # Optionally allow a Matcher to be created with a set of guides
+    #
+    def initialize(guides = nil)
+      @guides = guides || self.class.load_guides
+    end
+
+    ##
+    # Searches the guides for an ID match. The IDs will implicitly be downcasd
+    # without leading 0s. This is to match the processing of the filenames
+    def find_by_id(raw_id)
+      id = raw_id.to_s.downcase.sub(/\A0*/, '')
+      find { |g| g.id == id  }
+    end
+
+    ##
+    # Filter the guides by a search key. Note: They key must already be standardized
+    def search(key)
+      regex = /\A#{key}.*/
+      matching_guides = select do |guide|
+        guide.parts.any? { |p| regex.match?(p)  }
       end
+      self.class.new(matching_guides)
     end
   end
 end
+

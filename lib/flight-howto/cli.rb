@@ -59,7 +59,7 @@ module FlightHowto
     end
 
     create_command 'list' do |c|
-      c.summary = 'List available guides'
+      c.summary = 'List available guide'
       c.slop.bool '--verbose', 'Display additional information about each guide'
     end
 

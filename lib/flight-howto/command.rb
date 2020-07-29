@@ -25,7 +25,7 @@
 # https://github.com/openflighthpc/flight-howto
 #==============================================================================
 
-require_relative 'guide'
+require_relative 'matcher'
 
 require 'ostruct'
 

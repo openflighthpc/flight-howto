@@ -44,7 +44,7 @@ module FlightHowto
         if $stdout.tty?
           pastel.cyan guide.humanized_name
         else
-          guide.standard_basename
+          guide.parts.join('_')
         end
       end
       register_callable(header: "File (Dir: #{Config::CACHE.howto_dir})", verbose: true) do |guide|
@@ -60,7 +60,7 @@ module FlightHowto
       end
 
       def run
-        guides = fetch_guides
+        guides = Matcher.new.guides
         if guides.empty?
           $stderr.puts 'No guides found!'
         else
