@@ -29,33 +29,38 @@ module FlightHowto
   module Commands
     class Show < Command
       def run
-        guides = match_guides
-        if guides.length == 0
-          raise MissingError, "Could not locate: #{args.join(' ')}"
-        elsif guides.length == 1
-          guide = guides.first
-          options.no_pager ? (puts guide.render) : guide.page
+        guide = resolve_guide
+        options.no_pager ? (puts guide.render) : guide.page
+      end
+
+      def resolve_guide
+        # Attempt to find a guide by ID
+        if args.length == 1 && (guide = matcher.find_by_index(args.first))
+          guide
+
+        # Handle loose guide resolution
         else
-          msg = ['Could not uniquely identify a guide. Did you mean?']
-          guides.each do |guide|
-            msg << "#{guide.index} #{guide.humanized_name}"
+          guides = load_guides_from_args
+          if guides.length == 1
+            guides.first
+          elsif guides.length > 1
+            msg = ['Could not uniquely identify a guide. Did you mean?']
+            guides.each do |guide|
+              msg << "#{guide.index} #{guide.humanized_name}"
+            end
+            raise MissingError, msg.join("\n")
+          else
+            raise MissingError, "Could not locate: #{args.join(' ')}"
           end
-          raise MissingError, msg.join("\n")
         end
       end
 
-      def search_keys
-        Guide.standardize_string(args.join('_')).split('_').uniq
-      end
-
-      ##
-      # Select guides who's name contains all the search keys
-      # NOTE: This method ignores order because it is hard to check and does
-      #       not improve the usability
-      def match_guides
-        search_keys.reduce(matcher) do |memo, key|
-          memo.search(key)
-        end.guides
+      def load_guides_from_args
+        Guide.standardize_string(args.join('_'))
+             .split('_')
+             .uniq
+             .reduce(matcher) { |memo, key| memo.search(key) }
+             .guides
       end
 
       def matcher

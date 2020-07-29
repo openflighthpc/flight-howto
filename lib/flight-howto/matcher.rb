@@ -54,9 +54,9 @@ module FlightHowto
     ##
     # Searches the guides for an ID match. The IDs will implicitly be downcasd
     # without leading 0s. This is to match the processing of the filenames
-    def find_by_id(raw_id)
-      id = raw_id.to_s.downcase.sub(/\A0*/, '')
-      find { |g| g.id == id  }
+    def find_by_index(raw_index)
+      index = raw_index.to_s.downcase.sub(/\A0*/, '')
+      find { |g| g.index == index  }
     end
 
     ##
