@@ -38,7 +38,7 @@ module FlightHowto
     program :application, 'Flight How To'
     program :name, Config::CACHE.app_name
     program :version, "v#{FlightHowto::VERSION}"
-    program :description, 'View useful guides on how to use the flight utility'
+    program :description, 'View guides about your flight environment'
     program :help_paging, false
     default_command :help
 
@@ -60,7 +60,7 @@ module FlightHowto
     end
 
     create_command 'list' do |c|
-      c.summary = 'List available guide'
+      c.summary = 'List available guides'
       c.slop.bool '--verbose', 'Display additional information about each guide'
     end
 
