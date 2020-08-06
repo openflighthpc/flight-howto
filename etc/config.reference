@@ -37,7 +37,7 @@ config :app_name, default: ENV.fetch('FLIGHT_PROGRAM_NAME', 'bin/howto')
 # Howto Dir
 # The directory to where howto files are stored
 # ==============================================================================
-config :howto_dir, default: File.join(flight_ROOT, 'etc/howto')
+config :howto_dir, default: File.join(flight_ROOT, 'usr/share/howto')
 
 # ==============================================================================
 # Default Index
