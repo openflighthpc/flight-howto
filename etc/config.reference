@@ -56,6 +56,12 @@ config :howto_dir, default: File.join(flight_ROOT, 'usr/share/howto')
 config :default_index, default: 99
 
 # ==============================================================================
+# Pager Command
+# Define the command which guides will paged with
+# ==============================================================================
+config :pager_command, default: 'less -FRX'
+
+# ==============================================================================
 # Log Path
 # The file the logger will write to. It will write to standard error when set to
 # empty string.
