@@ -59,7 +59,7 @@ module FlightHowto
           elsif guides.length > 1
             raise MissingError, <<~ERROR.chomp
               Could not uniquely identify a guide. Did you mean one of the following?
-              #{Lister.build_output(verbose: false).render(*guides)}
+              #{Paint[Lister.build_output(verbose: false).render(*guides), :white]}
             ERROR
           else
             raise MissingError, "Could not locate: #{args.join(' ')}"
