@@ -28,6 +28,13 @@
 #==============================================================================
 
 # ==============================================================================
+# Environment Pager Setup
+# A default pager is setup to give pretty table handling. This can be overridden
+# by setting the `PAGER` env var.
+# ==============================================================================
+ENV['PAGER'] ||= 'less -FRX'
+
+# ==============================================================================
 # Application Name
 # The name of the application to use in the help text
 # ==============================================================================
@@ -54,12 +61,6 @@ config :howto_dir, default: File.join(flight_ROOT, 'usr/share/howto')
 # a search parameter.
 # ==============================================================================
 config :default_index, default: 99
-
-# ==============================================================================
-# Pager Command
-# Define the command which guides will paged with
-# ==============================================================================
-config :pager_command, default: 'less -FRX'
 
 # ==============================================================================
 # Log Path

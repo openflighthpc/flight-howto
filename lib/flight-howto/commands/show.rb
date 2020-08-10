@@ -32,8 +32,7 @@ module FlightHowto
         if options.no_pager
           puts load_content
         else
-          TTY::Pager.new(command: Config::CACHE.pager_command)
-                    .page(load_content)
+          TTY::Pager.new.page(load_content)
         end
       end
 
