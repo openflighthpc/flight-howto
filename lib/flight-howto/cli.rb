@@ -38,7 +38,7 @@ module FlightHowto
     program :application, 'Flight How To'
     program :name, Config::CACHE.app_name
     program :version, "v#{FlightHowto::VERSION}"
-    program :description, 'View guides about your flight environment'
+    program :description, 'View user guides about your HPC environment'
     program :help_paging, false
     default_command :help
 
@@ -60,14 +60,14 @@ module FlightHowto
     end
 
     create_command 'list' do |c|
-      c.summary = 'List available guides'
-      c.slop.bool '--verbose', 'Display additional information about each guide'
+      c.summary = 'List available user guides'
+      c.slop.bool '--verbose', 'Display additional information'
     end
 
     create_command 'show', 'NAME...' do |c|
-      c.summary = 'Search and display a how-to guide'
-      c.slop.bool '--no-pager', 'Do not use a pager to view the guide', default: false
-      c.slop.bool '--no-pretty', 'Display the guide as raw markdown', default: false
+      c.summary = 'Search and display a user guide'
+      c.slop.bool '--no-pager', 'Do not open in a pager', default: false
+      c.slop.bool '--no-pretty', 'Display as raw markdown', default: false
     end
 
     alias_command 'ls', 'list'
