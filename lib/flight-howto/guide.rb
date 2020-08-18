@@ -30,7 +30,7 @@ require 'tty-pager'
 
 module FlightHowto
   Guide = Struct.new(:path) do
-    INDEX_REGEX = /\A(?<index>\d[[:alnum:]]*)_(?<rest>.*)\Z/
+    INDEX_REGEX = /\A(?<index>\d+)_(?<rest>.*)\Z/
 
     ##
     # Used to convert strings into a standardized format. This provides case
@@ -38,11 +38,12 @@ module FlightHowto
     # * Use underscore for the word boundaries, and
     # * Downcase all letters
     def self.standardize_string(string)
-      string.dup.gsub(/[\s-]/, '_').downcase
+      string.dup                # Don't modify the input string
+            .gsub(/[\s-]/, '_') # Treat hyphen as an underscore
+            .downcase           # Make it case insensitive
     end
 
-    attr_reader :parts
-    attr_reader :index
+    attr_reader :index, :joined
 
     def initialize(*a)
       super
@@ -54,13 +55,31 @@ module FlightHowto
       match = INDEX_REGEX.match(name)
       if match
         # Remove the index from the name, and trim leading zeros
-        @index = match.named_captures['index'].sub(/\A0*/, '')
-        @parts = match.named_captures['rest'].split('_')
+        @index = match.named_captures['index'].to_i
+        @joined = match.named_captures['rest']
       else
-        # Set the index to the default
-        @index = Config::CACHE.default_index.to_s
-        @parts = name.split('_')
+        @index = nil
+        @joined = name
       end
+    end
+
+    ##
+    # Comparison Operator
+    def <=>(other)
+      return nil unless self.class == other.class
+      if index == other.index
+        joined <=> other.joined
+      elsif index && other.index
+        index <=> other.index
+      elsif index
+        -1
+      else
+        1
+      end
+    end
+
+    def parts
+      @parts ||= joined.split('_')
     end
 
     ##

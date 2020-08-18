@@ -37,6 +37,7 @@ module FlightHowto
     def self.load_guides
       Dir.glob(File.join(Config::CACHE.howto_dir, '*\.md'))
          .map { |p| Guide.new(p) }
+         .sort
     end
 
     ##
