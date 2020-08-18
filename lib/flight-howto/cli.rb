@@ -70,6 +70,8 @@ module FlightHowto
       c.slop.bool '--no-pretty', 'Display the guide as raw markdown', default: false
     end
 
+    alias_command 'ls', 'list'
+
     if Config::CACHE.development?
       create_command 'console' do |c|
         c.action do
