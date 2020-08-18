@@ -38,6 +38,7 @@ module FlightHowto
       Dir.glob(File.join(Config::CACHE.howto_dir, '*\.md'))
          .map { |p| Guide.new(p) }
          .sort
+         .tap { |guides| guides.each_with_index { |g, i| g.index = i + 1 } }
     end
 
     ##

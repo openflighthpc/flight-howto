@@ -46,9 +46,16 @@ module FlightHowto
       end
 
       def resolve_guide
-        # Attempt to find a guide by ID
-        if args.length == 1 && (guide = matcher.find_by_index(args.first))
-          guide
+        # Finds by ID if there is a single integer argument
+        if args.length == 1 && args.first.match?(/\A\d+\Z/)
+          # Corrects for the 1-based numbering
+          index = args.first.to_i - 1
+          if index < 0 || index >= matcher.guides.length
+            raise MissingError, <<~ERROR.chomp
+              Could not locate a guide with index: #{args.first}
+            ERROR
+          end
+          matcher.guides[index]
 
         # Handle loose guide resolution
         else

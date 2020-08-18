@@ -44,6 +44,7 @@ module FlightHowto
     end
 
     attr_reader :prefix, :joined
+    attr_writer :index
 
     def initialize(*a)
       super
@@ -76,6 +77,18 @@ module FlightHowto
       else
         1
       end
+    end
+
+    ##
+    # A guide's index depends on the sort order within the greater list of guides
+    # To prevent time complexity issues, it is injected onto guide after it is loaded
+    # This creates two problems:
+    #  * It could be accessed before being set, triggering an internal error
+    #  * It can become stale and should be viewed with scepticism
+    def index
+      @index || raise(InternalError, <<~ERROR.chomp)
+        The guide index has not been set: #{path}
+      ERROR
     end
 
     def parts
