@@ -38,7 +38,7 @@ module FlightHowto
     program :application, 'Flight How To'
     program :name, Config::CACHE.app_name
     program :version, "v#{FlightHowto::VERSION}"
-    program :description, 'View user guides about your HPC environment'
+    program :description, 'View user guides for your HPC environment'
     program :help_paging, false
     default_command :help
 
