@@ -37,7 +37,7 @@ module FlightHowto
     # Defines the columns to the output as a series of blocks
     # Essentially each "callable" is a proc and a config rolled into a single object
     register_callable(header: 'Index') do |guide|
-      $stdout.tty? ? pastel.yellow(guide.index) : guide.index
+      $stdout.tty? ? pastel.yellow(guide.prefix) : guide.prefix
     end
     register_callable(header: 'Name') do |guide|
       if $stdout.tty?

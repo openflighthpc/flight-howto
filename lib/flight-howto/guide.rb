@@ -30,7 +30,7 @@ require 'tty-pager'
 
 module FlightHowto
   Guide = Struct.new(:path) do
-    INDEX_REGEX = /\A(?<index>\d+)_(?<rest>.*)\Z/
+    PREFIX_REGEX = /\A(?<prefix>\d+)_(?<rest>.*)\Z/
 
     ##
     # Used to convert strings into a standardized format. This provides case
@@ -43,7 +43,7 @@ module FlightHowto
             .downcase           # Make it case insensitive
     end
 
-    attr_reader :index, :joined
+    attr_reader :prefix, :joined
 
     def initialize(*a)
       super
@@ -51,14 +51,14 @@ module FlightHowto
       # Standardizes the case and word boundaries
       name = self.class.standardize_string(File.basename(path, '.*'))
 
-      # Detects if an index has been provided
-      match = INDEX_REGEX.match(name)
+      # Detects if an prefix has been provided
+      match = PREFIX_REGEX.match(name)
       if match
-        # Remove the index from the name, and trim leading zeros
-        @index = match.named_captures['index'].to_i
+        # Remove the prefix from the name, and trim leading zeros
+        @prefix = match.named_captures['prefix'].to_i
         @joined = match.named_captures['rest']
       else
-        @index = nil
+        @prefix = nil
         @joined = name
       end
     end
@@ -67,11 +67,11 @@ module FlightHowto
     # Comparison Operator
     def <=>(other)
       return nil unless self.class == other.class
-      if index == other.index
+      if prefix == other.prefix
         joined <=> other.joined
-      elsif index && other.index
-        index <=> other.index
-      elsif index
+      elsif prefix && other.prefix
+        prefix <=> other.prefix
+      elsif prefix
         -1
       else
         1
@@ -84,7 +84,7 @@ module FlightHowto
 
     ##
     # Converts the parts to a human friendly format. This does
-    # not include the index
+    # not include the prefix
     def humanized_name
       @humanized_name ||= parts.map(&:capitalize).join(' ')
     end

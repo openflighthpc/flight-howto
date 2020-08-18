@@ -53,11 +53,9 @@ module FlightHowto
     end
 
     ##
-    # Searches the guides for an ID match. The IDs will implicitly be downcasd
-    # without leading 0s. This is to match the processing of the filenames
+    # OBSOLETE: This method has reached EOL and is pending removal
     def find_by_index(raw_index)
-      index = raw_index.to_s.downcase.sub(/\A0*/, '')
-      find { |g| g.index == index  }
+      raise NotImplementedError
     end
 
     ##
