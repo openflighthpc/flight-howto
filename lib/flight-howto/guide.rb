@@ -120,7 +120,7 @@ module FlightHowto
           colors = 16
           retry
         end
-        Config::Logger.error "Failed to pretty render: #{path}"
+        Config::CACHE.logger.error "Failed to pretty render: #{path}"
         content
       end
     end
