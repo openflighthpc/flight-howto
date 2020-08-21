@@ -33,6 +33,7 @@ gem 'output_mode'
 gem 'pastel'
 gem 'tty-markdown'
 gem 'tty-pager'
+gem 'word_wrap'
 gem 'xdg'
 
 group :development do

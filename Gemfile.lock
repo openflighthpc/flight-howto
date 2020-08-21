@@ -54,6 +54,7 @@ GEM
       tty-screen (~> 0.7)
     unicode-display_width (1.7.0)
     unicode_utils (1.4.0)
+    word_wrap (1.0.0)
     xdg (4.2.0)
 
 PLATFORMS
@@ -68,6 +69,7 @@ DEPENDENCIES
   pry-byebug
   tty-markdown
   tty-pager
+  word_wrap
   xdg
 
 BUNDLED WITH
