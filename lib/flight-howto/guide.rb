@@ -25,9 +25,8 @@
 # https://github.com/openflighthpc/flight-howto
 #==============================================================================
 
-require 'tty-markdown'
 require 'tty-pager'
-require 'word_wrap'
+require_relative 'renderer'
 
 module FlightHowto
   Guide = Struct.new(:path) do
@@ -112,18 +111,10 @@ module FlightHowto
     ##
     # Renders the markdown
     def render
-      colors = 256
-      width = TTY::Screen.width # Set the maximum width to the terminal
-      width = 80 if width < 80  # Set the minimum width to 80
-      width = width - 5         # Don't wrap exactly on the boundary
-      content = WordWrap.ww(read.force_encoding('UTF-8'), width)
+      content = read.force_encoding('UTF-8')
       begin
-        TTY::Markdown.parse(content, colors: colors)
-      rescue => e
-        if colors > 16
-          colors = 16
-          retry
-        end
+        Renderer.new(content).wrap_markdown
+      rescue
         Config::CACHE.logger.error "Failed to pretty render: #{path}"
         Config::CACHE.logger.warn e.full_message
         content
