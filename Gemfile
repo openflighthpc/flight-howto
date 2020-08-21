@@ -31,9 +31,9 @@ gem 'commander-openflighthpc', '~> 2'
 gem 'hashie'
 gem 'output_mode'
 gem 'pastel'
-gem 'tty-markdown', git: 'https://github.com/piotrmurach/tty-markdown'
-gem 'tty-table',    git: 'https:////github.com/piotrmurach/tty-table'
-gem 'tty-pager',    git: 'https://github.com/piotrmurach/tty-pager'
+gem 'tty-markdown', git: 'https://github.com/piotrmurach/tty-markdown', ref: '138d7255b1316bb2a7e46062a60965c2e9c413d2'
+gem 'tty-table',    git: 'https:////github.com/piotrmurach/tty-table',  ref: '0088ab81b5f211012eda0f7970fc9ae5b8fc3824'
+gem 'tty-pager',    git: 'https://github.com/piotrmurach/tty-pager',    ref: 'd5fc3426ad1e5d670c7bc890b240d1cfe9124ac5'
 gem 'xdg'
 
 group :development do

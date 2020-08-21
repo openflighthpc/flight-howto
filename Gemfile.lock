@@ -1,6 +1,7 @@
 GIT
   remote: https://github.com/piotrmurach/tty-markdown
   revision: 138d7255b1316bb2a7e46062a60965c2e9c413d2
+  ref: 138d7255b1316bb2a7e46062a60965c2e9c413d2
   specs:
     tty-markdown (0.7.0)
       kramdown (>= 1.16.2, < 3.0)
@@ -13,6 +14,7 @@ GIT
 GIT
   remote: https://github.com/piotrmurach/tty-pager
   revision: d5fc3426ad1e5d670c7bc890b240d1cfe9124ac5
+  ref: d5fc3426ad1e5d670c7bc890b240d1cfe9124ac5
   specs:
     tty-pager (0.13.0)
       strings (~> 0.2.0)
@@ -21,6 +23,7 @@ GIT
 GIT
   remote: https:////github.com/piotrmurach/tty-table
   revision: 0088ab81b5f211012eda0f7970fc9ae5b8fc3824
+  ref: 0088ab81b5f211012eda0f7970fc9ae5b8fc3824
   specs:
     tty-table (0.11.0)
       equatable (~> 0.6)
