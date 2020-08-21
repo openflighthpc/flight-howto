@@ -31,9 +31,19 @@ gem 'commander-openflighthpc', '~> 2'
 gem 'hashie'
 gem 'output_mode'
 gem 'pastel'
+
+# Bug work around. The 0.6.x series of TTY::Markdown has a couple of bugs which
+# have been fixed on master. However there is a hard version bump of 'pastel'
+# from 0.7.x to 0.8.x
+#
+# This means all the tty-* libraries need to be bumped to the master versions.
+# There is an independent bug in the referenced version of tty-markdown where
+# it doesn't require URI
+require 'uri'
 gem 'tty-markdown', git: 'https://github.com/piotrmurach/tty-markdown', ref: '138d7255b1316bb2a7e46062a60965c2e9c413d2'
 gem 'tty-table',    git: 'https:////github.com/piotrmurach/tty-table',  ref: '0088ab81b5f211012eda0f7970fc9ae5b8fc3824'
 gem 'tty-pager',    git: 'https://github.com/piotrmurach/tty-pager',    ref: 'd5fc3426ad1e5d670c7bc890b240d1cfe9124ac5'
+
 gem 'xdg'
 
 group :development do

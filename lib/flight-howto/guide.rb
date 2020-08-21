@@ -115,12 +115,13 @@ module FlightHowto
       content = read.force_encoding('UTF-8')
       begin
         TTY::Markdown.parse(content, colors: colors)
-      rescue
+      rescue => e
         if colors > 16
           colors = 16
           retry
         end
         Config::CACHE.logger.error "Failed to pretty render: #{path}"
+        Config::CACHE.logger.warn e.full_message
         content
       end
     end
