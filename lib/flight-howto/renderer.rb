@@ -34,7 +34,8 @@ module FlightHowto
 
     def initialize(*_)
       super
-      self.width ||= ((w = TTY::Screen.width) > 80 ? w : 80)
+      self.width ||= TTY::Screen.width
+      self.width = Config::CACHE.minimum_terminal_width if self.width < Config::CACHE.minimum_terminal_width
       @colors = 256 # Attempt to use 256-color initially
     end
 

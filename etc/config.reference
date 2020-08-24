@@ -47,6 +47,13 @@ config :app_name, default: ENV.fetch('FLIGHT_PROGRAM_NAME', 'bin/howto')
 config :howto_dir, default: File.join(flight_ROOT, 'usr/share/howto')
 
 # ==============================================================================
+# Minimum Terminal Width
+# Specifies the minimum terminal width. This prevents the output becoming
+# nonsensical in small terminals. Reduce the minimum with caution!
+# ==============================================================================
+config :minimum_terminal_width, default: 80, transform_with: ->(v) { v.to_i }
+
+# ==============================================================================
 # Log Path
 # The file the logger will write to. It will write to standard error when set to
 # empty string.
