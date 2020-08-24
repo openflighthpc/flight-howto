@@ -54,13 +54,27 @@ module FlightHowto
       end.join("\n")
     end
 
+    ##
+    # HACK: The "greatest_width" represents a terminal large enough to fit the
+    # content without text wrapping. This (*roughly) corresponds with the width
+    # of the longest line in the content.
+    # * There are edge cases due to the content being padded and colourized
+    #
+    # As the content length must be equal or greater than its longest line; the
+    # total length can be used as proxy. An additional terminal width is added
+    # to handle (*most) of the edge cases.
+    # * There still maybe a corner case when formatting a single paragraph
+    def greatest_width
+      content.length + width
+    end
+
     def parse_markdown
       # TTY::Markdown does not wrap text correctly and makes it difficult
       # for WordWrap as it adds padding to the beginning of the lines.
       #
       # A work around is to pseudo disable text wrapping at this stage and then
       # wrap each line individually accounting for its padding.
-      TTY::Markdown.parse(content, colors: colors, width: content.length)
+      TTY::Markdown.parse(content, colors: colors, width: greatest_width)
     rescue
       if colors > 16
         @colors = 16
