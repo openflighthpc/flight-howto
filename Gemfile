@@ -30,21 +30,10 @@ source 'https://rubygems.org'
 gem 'commander-openflighthpc', '~> 2'
 gem 'hashie'
 gem 'output_mode'
-# There is a bug in TTY::Markdown where it does not render links correctly
-# This will be fixed in the version 0.7.0 release, however the fix is on the
-# master branch. The catch is the new version requires the bleeding edge of the
-# entire TTY toolbox.
-#
-# This fix can be removed once the 0.7.0 version is released
-# https://github.com/piotrmurach/tty-markdown/issues/26
-#
-# PS: TTY::Table is not required directly by this app, but is a transient
-# dependency of OutputMode. However due to the above issue, it also needs to
-# be on the bleeding edge ¯\_(ツ)_/¯
-gem 'pastel',       git: 'https://github.com/piotrmurach/pastel',       ref: 'afd82952076e605402a54dd0a142cdcebe34edc7'
-gem 'tty-markdown', git: 'https://github.com/piotrmurach/tty-markdown', ref: '93f6fe9096f3096d65dd3e752d9d873fd0f7acd6'
-gem 'tty-pager',    git: 'https://github.com/piotrmurach/tty-pager',    ref: 'd5fc3426ad1e5d670c7bc890b240d1cfe9124ac5'
-gem 'tty-table',    git: 'https://github.com/piotrmurach/tty-table',    ref: '0088ab81b5f211012eda0f7970fc9ae5b8fc3824'
+gem 'pastel'
+# NOTE: Remember to remove the patch before updating TTY::Markdown to version 0.7
+gem 'tty-markdown', '~> 0.6.0'
+gem 'tty-pager'
 gem 'word_wrap'
 gem 'xdg'
 

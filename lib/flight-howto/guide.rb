@@ -114,7 +114,7 @@ module FlightHowto
       content = read.force_encoding('UTF-8')
       begin
         Renderer.new(content).wrap_markdown
-      rescue
+      rescue => e
         Config::CACHE.logger.error "Failed to pretty render: #{path}"
         Config::CACHE.logger.warn e.full_message
         content
