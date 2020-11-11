@@ -27,10 +27,12 @@
 
 require 'tty-pager'
 require_relative 'renderer'
+require 'json'
 
 module FlightHowto
   Guide = Struct.new(:path) do
-    PREFIX_REGEX = /\A(?<prefix>\d+)_(?<rest>.*)\Z/
+    PREFIX_REGEX  = /\A(?<prefix>\d+)_(?<rest>.*)\Z/
+    META_REGEX    = /\A:\s*(?<key>\w+)\s*[=:]\s*(?<value>.*)\Z/
 
     ##
     # Used to convert strings into a standardized format. This provides case
@@ -103,6 +105,22 @@ module FlightHowto
     end
 
     ##
+    # Processes the metadata block at the start of each guide
+    def read_metadata
+      {}.tap do |meta|
+        File.open(path) do |file|
+          while (line = file.gets)[0] == ':'
+            if match = META_REGEX.match(line)
+              key       = match.named_captures['key'].downcase.to_sym
+              # Load the value as JSON to provide nice handling of true/false
+              meta[key] = JSON.parse match.named_captures['value']
+            end
+          end
+        end
+      end
+    end
+
+    ##
     # Reads the guide without the metadata
     def read_content
       enum = File.read(path).each_line
@@ -112,8 +130,8 @@ module FlightHowto
         # Fast forward past the metadata block
         enum.next while enum.peek[0] == ':'
 
-        # Skip a single trailing blank or white space line
-        enum.next if /^\s*\n?$/.match? enum.peek
+        # Skip a single trailing blank line
+        enum.next if enum.peek == "\n"
 
         # Reform the remaining content
         loop { memo = memo << enum.next }
