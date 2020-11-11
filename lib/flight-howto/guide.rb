@@ -103,15 +103,31 @@ module FlightHowto
     end
 
     ##
-    # Reads the guides content
-    def read
-      File.read path
+    # Reads the guide without the metadata
+    def read_content
+      enum = File.read(path).each_line
+      memo = ''
+
+      begin
+        # Fast forward past the metadata block
+        enum.next while enum.peek[0] == ':'
+
+        # Skip a single trailing blank or white space line
+        enum.next if /^\s*\n?$/.match? enum.peek
+
+        # Reform the remaining content
+        loop { memo = memo << enum.next }
+      rescue StopIteration
+        # NOOP
+      end
+
+      memo.force_encoding('UTF-8')
     end
 
     ##
     # Renders the markdown
     def render
-      content = read.force_encoding('UTF-8')
+      content = read_content
       begin
         Renderer.new(content).wrap_markdown
       rescue => e
