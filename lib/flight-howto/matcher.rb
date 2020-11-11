@@ -26,6 +26,7 @@
 #==============================================================================
 
 require_relative 'guide'
+require 'open3'
 
 module FlightHowto
   class Matcher
@@ -33,12 +34,24 @@ module FlightHowto
     extend  Forwardable
 
     ##
+    # Determines if the user has admin privileges
+    def self.admin?
+      _o, _e, status = Open3.capture3(
+        'sudo', '-ln', '/bin/bash', unsetenv_others: true, close_others: true
+      )
+      status.success?
+    end
+
+    ##
     # Helper method for loading in all the guides
     def self.load_guides
       Dir.glob(File.join(Config::CACHE.howto_dir, '*\.md'))
          .map { |p| Guide.new(p) }
-         .sort
-         .tap { |guides| guides.each_with_index { |g, i| g.index = i + 1 } }
+         .tap do |guides|
+        guides.reject!(&:admin?) unless admin?
+        guides.sort!
+        guides.each_with_index { |g, i| g.index = i + 1 }
+      end
     end
 
     ##

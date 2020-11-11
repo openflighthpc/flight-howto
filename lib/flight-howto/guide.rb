@@ -105,19 +105,13 @@ module FlightHowto
     end
 
     ##
-    # Processes the metadata block at the start of each guide
-    def read_metadata
-      {}.tap do |meta|
-        File.open(path) do |file|
-          while (line = file.gets)[0] == ':'
-            if match = META_REGEX.match(line)
-              key       = match.named_captures['key'].downcase.to_sym
-              # Load the value as JSON to provide nice handling of true/false
-              meta[key] = JSON.parse match.named_captures['value']
-            end
-          end
-        end
-      end
+    # Checks if the command is admin only by loading the metadata
+    def admin?
+      metadata[:admin] ? true : false
+    end
+
+    def metadata
+      @metadata ||= read_metadata
     end
 
     ##
@@ -152,6 +146,24 @@ module FlightHowto
         Config::CACHE.logger.error "Failed to pretty render: #{path}"
         Config::CACHE.logger.warn e.full_message
         content
+      end
+    end
+
+    private
+
+    ##
+    # Processes the metadata block at the start of each guide
+    def read_metadata
+      {}.tap do |meta|
+        File.open(path) do |file|
+          while (line = file.gets)[0] == ':'
+            if match = META_REGEX.match(line)
+              key       = match.named_captures['key'].downcase.to_sym
+              # Load the value as JSON to provide nice handling of true/false
+              meta[key] = JSON.parse match.named_captures['value']
+            end
+          end
+        end
       end
     end
   end
