@@ -27,13 +27,13 @@
 
 require 'tty-pager'
 require_relative 'renderer'
+require_relative 'meta_regex'
 require 'json'
 
 module FlightHowto
-  Guide = Struct.new(:path) do
-    PREFIX_REGEX  = /\A(?<prefix>\d+)_(?<rest>.*)\Z/
-    META_REGEX    = /\A:\s*(?<key>\w+)\s*[=:]\s*(?<value>.*)\Z/
+  PREFIX_REGEX  = /\A(?<prefix>\d+)_(?<rest>.*)\Z/
 
+  Guide = Struct.new(:path) do
     ##
     # Used to convert strings into a standardized format. This provides case
     # and word boundary invariance. The standardization process will:
