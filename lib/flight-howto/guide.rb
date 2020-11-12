@@ -28,7 +28,6 @@
 require 'tty-pager'
 require_relative 'renderer'
 require_relative 'meta_regex'
-require 'json'
 
 module FlightHowto
   PREFIX_REGEX  = /\A(?<prefix>\d+)_(?<rest>.*)\Z/
@@ -159,8 +158,18 @@ module FlightHowto
           while (line = file.gets)[0] == ':'
             if match = META_REGEX.match(line)
               key       = match.named_captures['key'].downcase.to_sym
-              # Load the value as JSON to provide nice handling of true/false
-              meta[key] = JSON.parse match.named_captures['value']
+              value = match.named_captures['value']
+
+              meta[key] = case value.to_s
+                          when 'true'
+                            true
+                          when 'false'
+                            false
+                          when ''
+                            nil
+                          else
+                            value
+                          end
             end
           end
         end
