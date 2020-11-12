@@ -57,19 +57,19 @@
 
 module FlightHowto
   META_REGEX = /
-    (?:^|\A):                   # beginning of line, with a colon prefix
-    \s*                         # leading whitespace
-    (?<key>[\w]+)               # key
-    (?:\s*=\s*?|:\s+?)          # separator
-    (?:                         # optional value begin
-      '(?<value>(?:\\'|[^'])*)' #   single quoted value
-      |                         #   or
-      "(?<value>(?:\\"|[^"])*)" #   double quoted value
-      |                         #   or
-      (?<value>[^\#\r\n]+)      #   unquoted value
-    )?                          # value end
-    \s*                         # trailing whitespace
-    (?:\#.*)?                   # optional comment
-    (?:$|\z)                    # end of line
+    (?:^|\A):                     # beginning of line, with a colon prefix
+    \s*                           # leading whitespace
+    (?<key>[\w]+)                 # key
+    (?:\s*=\s*?|:\s+?)            # separator
+    (?:                           # optional value begin
+      '(?<literal>(?:\\'|[^'])*)' #   single quoted value
+      |                           #   or
+      "(?<literal>(?:\\"|[^"])*)" #   double quoted value
+      |                           #   or
+      (?<value>[^\#\r\n]+)        #   unquoted value
+    )?                            # value end
+    \s*                           # trailing whitespace
+    (?:\#.*)?                     # optional comment
+    (?:$|\z)                      # end of line
   /x
 end

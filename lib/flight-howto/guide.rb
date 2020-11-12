@@ -158,18 +158,21 @@ module FlightHowto
           while (line = file.gets)[0] == ':'
             if match = META_REGEX.match(line)
               key       = match.named_captures['key'].downcase.to_sym
-              value = match.named_captures['value']
-
-              meta[key] = case value.to_s
-                          when 'true'
-                            true
-                          when 'false'
-                            false
-                          when ''
-                            nil
-                          else
-                            value
-                          end
+              if value = match.named_captures['literal']
+                meta[key] = value
+              else
+                value = match.named_captures['value']
+                meta[key] = case value.to_s
+                            when 'true'
+                              true
+                            when 'false'
+                              false
+                            when ''
+                              nil
+                            else
+                              value
+                            end
+              end
             end
           end
         end
