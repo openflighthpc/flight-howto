@@ -62,9 +62,9 @@ module FlightHowto
     (?<key>[\w]+)                 # key
     (?:\s*=\s*?|:\s+?)            # separator
     (?:                           # optional value begin
-      '(?<literal>(?:\\'|[^'])*)' #   single quoted value
+      '(?<single>(?:\\'|[^'])*)'  #   single quoted value
       |                           #   or
-      "(?<literal>(?:\\"|[^"])*)" #   double quoted value
+      "(?<double>(?:\\"|[^"])*)"  #   double quoted value
       |                           #   or
       (?<value>[^\#\r\n]+)        #   unquoted value
     )?                            # value end

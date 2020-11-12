@@ -26,6 +26,7 @@
 #==============================================================================
 
 require 'tty-pager'
+
 require_relative 'renderer'
 require_relative 'meta_regex'
 
@@ -157,21 +158,26 @@ module FlightHowto
         File.open(path) do |file|
           while (line = file.gets)[0] == ':'
             if match = META_REGEX.match(line)
-              key       = match.named_captures['key'].downcase.to_sym
-              if value = match.named_captures['literal']
-                meta[key] = value
-              else
-                value = match.named_captures['value']
-                meta[key] = case value.to_s
+              captures  = match.named_captures
+              key       = captures['key'].downcase.to_sym
+
+              if value = captures['single']
+                meta[key] = value.gsub("\'", "'")
+              elsif value = captures['double']
+                meta[key] = "\"#{value}\"".undump
+              elsif value = captures['value']
+                meta[key] = case value
                             when 'true'
                               true
                             when 'false'
                               false
-                            when ''
-                              nil
+                            when /\d+/
+                              value.to_i
                             else
                               value
                             end
+              else
+                meta[key] = nil
               end
             end
           end
