@@ -30,7 +30,6 @@ source 'https://rubygems.org'
 gem 'commander-openflighthpc', '~> 2'
 gem 'hashie'
 gem 'output_mode'
-gem 'pastel'
 gem 'picky'
 # NOTE: Remember to remove the patch before updating TTY::Markdown to version 0.7
 gem 'tty-markdown', '~> 0.6.0'

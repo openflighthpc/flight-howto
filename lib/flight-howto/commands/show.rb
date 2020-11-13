@@ -63,9 +63,12 @@ module FlightHowto
           if guides.length == 1
             guides.first
           elsif guides.length > 1
+            # Always display the interactive output as the error message is
+            # inherently user facing
+            out = Lister.build_output(ascii: options.ascii, verbose: options.verbose, interactive: true)
             raise MissingError, <<~ERROR.chomp
               Could not uniquely identify a guide. Did you mean one of the following?
-              #{Paint[Lister.build_output(verbose: false).render(*guides), :reset]}
+              #{Paint[out.render(*guides), :reset]}
             ERROR
           else
             raise MissingError, "Could not locate: #{args.join(' ')}"

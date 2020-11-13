@@ -25,10 +25,6 @@
 # https://github.com/openflighthpc/flight-howto
 #==============================================================================
 
-require 'output_mode'
-require 'pathname'
-require 'pastel'
-
 module FlightHowto
   module Commands
     class List < Command
@@ -37,7 +33,8 @@ module FlightHowto
         if guides.empty?
           $stderr.puts 'No guides found!'
         else
-          puts Lister.build_output(verbose: options.verbose).render(*guides)
+          puts Lister.build_output(ascii: options.ascii, verbose: options.verbose)
+                     .render(*guides)
         end
       end
     end
