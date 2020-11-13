@@ -26,6 +26,7 @@
 #==============================================================================
 
 require 'tty-pager'
+require 'securerandom'
 
 require_relative 'renderer'
 require_relative 'meta_regex'
@@ -64,6 +65,13 @@ module FlightHowto
         @prefix = nil
         @joined = name
       end
+    end
+
+    ##
+    # A random identifier used to back reference from the search algorithm
+    # It is not intended to be exposed to the end user
+    def id
+      @id ||= SecureRandom.uuid
     end
 
     ##
@@ -114,8 +122,13 @@ module FlightHowto
       @metadata ||= read_metadata
     end
 
+    def content
+      @content ||= read_content
+    end
+
     ##
     # Reads the guide without the metadata
+    # TODO: Make this private
     def read_content
       enum = File.read(path).each_line
       memo = ''

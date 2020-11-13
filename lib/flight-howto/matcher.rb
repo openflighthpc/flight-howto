@@ -75,12 +75,37 @@ module FlightHowto
 
     ##
     # Filter the guides by name. Note the name must already be standardized
-    def search_by_name(key)
+    def search_name(key)
       regex = /\A#{key}.*/
       matching_guides = select do |guide|
         guide.parts.any? { |p| regex.match?(p)  }
       end
       self.class.new(matching_guides)
+    end
+
+    def search_content(key)
+      ids = picky.search(key).ids
+      ids.map { |id| id_map[id] }.sort_by(&:index)
+    end
+
+    private
+
+    def id_map
+      @id_map ||= guides.map { |g| [g.id, g] }.to_h
+    end
+
+    # Used to preform a search on the entire text body
+    def picky
+      @picky ||= begin
+        index = Picky::Index.new :guides do
+          indexing splits_text_on: /\s/
+          category :content, partial: Picky::Partial::None.new
+        end
+        guides.each { |g| index.add g }
+        Picky::Search.new index do
+          searching splits_text_on: /\s/
+        end
+      end
     end
   end
 end
