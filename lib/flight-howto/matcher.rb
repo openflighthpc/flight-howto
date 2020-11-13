@@ -68,12 +68,6 @@ module FlightHowto
     end
 
     ##
-    # OBSOLETE: This method has reached EOL and is pending removal
-    def find_by_index(raw_index)
-      raise NotImplementedError
-    end
-
-    ##
     # Filter the guides by name. Note the name must already be standardized
     def search_name(key)
       regex = /\A#{key}.*/
@@ -84,8 +78,10 @@ module FlightHowto
     end
 
     def search_content(key)
-      ids = picky.search(key).ids
-      ids.map { |id| id_map[id] }.sort_by(&:index)
+      picky.search(key)
+           .ids
+           .map { |id| id_map[id] }
+           .sort_by(&:index)
     end
 
     private
