@@ -39,7 +39,11 @@ module FlightHowto
       def load_content
         guide = resolve_guide
         if $stdout.tty? && !options.no_pretty
-          guide.render
+          if Config::CACHE.groff_render
+            guide.render_manpage
+          else
+            guide.render
+          end
         else
           guide.content
         end

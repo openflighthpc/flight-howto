@@ -54,6 +54,12 @@ config :howto_dir, default: File.join(flight_ROOT, 'usr/share/howto')
 config :minimum_terminal_width, default: 80, transform_with: ->(v) { v.to_i }
 
 # ==============================================================================
+# Groff Rendering
+# Render the howto using groff instead of prettified markdown
+# ==============================================================================
+config :groff_render, default: ENV.fetch('flight_HOWTO_groff_render', false)
+
+# ==============================================================================
 # Template Config Directory
 # Specify the directory where templating configs are stored. The configs are
 # loaded in alphanumeric order
