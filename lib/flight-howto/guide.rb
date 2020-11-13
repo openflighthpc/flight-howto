@@ -26,6 +26,7 @@
 #==============================================================================
 
 require 'tty-pager'
+require 'securerandom'
 
 require_relative 'renderer'
 require_relative 'parser'
@@ -64,6 +65,13 @@ module FlightHowto
         @prefix = nil
         @joined = name
       end
+    end
+
+    ##
+    # A random identifier used to back reference from the search algorithm
+    # It is not intended to be exposed to the end user
+    def id
+      @id ||= SecureRandom.uuid
     end
 
     ##

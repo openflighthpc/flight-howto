@@ -77,7 +77,7 @@ module FlightHowto
         Guide.standardize_string(args.join('_'))
              .split('_')
              .uniq
-             .reduce(matcher) { |memo, key| memo.search(key) }
+             .reduce(matcher) { |memo, key| memo.search_name(key) }
              .guides
       end
 
