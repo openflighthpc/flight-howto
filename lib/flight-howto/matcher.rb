@@ -27,6 +27,7 @@
 
 require_relative 'guide'
 require 'open3'
+require 'picky'
 
 module FlightHowto
   class Matcher
@@ -73,8 +74,8 @@ module FlightHowto
     end
 
     ##
-    # Filter the guides by a search key. Note: They key must already be standardized
-    def search(key)
+    # Filter the guides by name. Note the name must already be standardized
+    def search_by_name(key)
       regex = /\A#{key}.*/
       matching_guides = select do |guide|
         guide.parts.any? { |p| regex.match?(p)  }
