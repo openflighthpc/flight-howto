@@ -59,9 +59,11 @@ module FlightHowto
       end
     end
 
+    global_slop.bool '--verbose', 'Display additional information'
+    global_slop.bool '--ascii', 'Display the uncolorized ASCII output'
+
     create_command 'list' do |c|
       c.summary = 'List available user guides'
-      c.slop.bool '--verbose', 'Display additional information'
     end
 
     create_command 'show', 'NAME...' do |c|
