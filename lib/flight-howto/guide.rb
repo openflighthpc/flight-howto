@@ -26,12 +26,14 @@
 #==============================================================================
 
 require 'tty-pager'
+require 'open3'
 
 require_relative 'markdown_renderer'
 require_relative 'parser'
 require_relative 'template_context'
 
 module FlightHowto
+  GROFF_CMD = 'groff -mtty-char -mandoc -Tascii -t -'
   PREFIX_REGEX  = /\A(?<prefix>\d+)_(?<rest>.*)\Z/
 
   Guide = Struct.new(:path) do
@@ -124,6 +126,24 @@ module FlightHowto
       @content ||= begin
         raw = parse_result.content
         template? ? TemplateContext.load.render(raw) : raw
+      end
+    end
+
+    def render_manpage
+      roff = Kramdown::Document.new(content, input: :markdown).to_man
+      out, errors, status = Open3.capture3(GROFF_CMD, stdin_data: roff, unsetenv_others: true, close_others: true)
+
+      unless errors.empty?
+        Config::CACHE.logger.warn <<~WARN.chomp
+          The following errors when rendering the manpage for: #{path}
+          #{errors}
+        WARN
+      end
+
+      if status.success?
+        out
+      else
+        raise RenderError, "Failed to render: #{humanized_name}"
       end
     end
 
