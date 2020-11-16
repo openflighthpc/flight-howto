@@ -75,7 +75,9 @@ module FlightHowto
     end
 
     def render(template)
-      ERB.new(template, nil, '-').result(self.binding)
+      Bundler.with_original_env do
+        ERB.new(template, nil, '-').result(self.binding)
+      end
     end
   end
 end
