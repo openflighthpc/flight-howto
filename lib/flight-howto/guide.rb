@@ -130,7 +130,7 @@ module FlightHowto
     end
 
     def render_manpage
-      roff = Kramdown::Document.new(content, input: :markdown).to_man
+      roff = Kramdown::Document.new(content, hard_wrap: false, input: 'GFM').to_man
       out, errors, status = Open3.capture3(GROFF_CMD, stdin_data: roff, unsetenv_others: true, close_others: true)
 
       unless errors.empty?

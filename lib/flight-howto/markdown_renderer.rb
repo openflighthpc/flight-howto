@@ -74,7 +74,7 @@ module FlightHowto
       #
       # A work around is to pseudo disable text wrapping at this stage and then
       # wrap each line individually accounting for its padding.
-      TTY::Markdown.parse(content, colors: colors, width: greatest_width, indent: 0)
+      TTY::Markdown.parse(content, colors: colors, width: greatest_width, input: 'GFM')
     rescue
       if colors > 16
         @colors = 16
