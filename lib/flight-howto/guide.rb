@@ -27,7 +27,7 @@
 
 require 'tty-pager'
 
-require_relative 'renderer'
+require_relative 'markdown_renderer'
 require_relative 'parser'
 
 module FlightHowto
@@ -122,7 +122,7 @@ module FlightHowto
     # Renders the markdown
     def render
       begin
-        Renderer.new(content).wrap_markdown
+        MarkdownRenderer.new(content).wrap_markdown
       rescue => e
         Config::CACHE.logger.error "Failed to pretty render: #{path}"
         Config::CACHE.logger.warn e.full_message
