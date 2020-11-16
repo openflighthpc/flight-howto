@@ -29,6 +29,7 @@ require 'tty-pager'
 
 require_relative 'markdown_renderer'
 require_relative 'parser'
+require_relative 'template_context'
 
 module FlightHowto
   PREFIX_REGEX  = /\A(?<prefix>\d+)_(?<rest>.*)\Z/
@@ -93,6 +94,10 @@ module FlightHowto
       ERROR
     end
 
+    def template?
+      /\.erb\Z/.match? path
+    end
+
     def parts
       @parts ||= joined.split('_')
     end
@@ -115,7 +120,10 @@ module FlightHowto
     end
 
     def content
-      parse_result.content
+      @content ||= begin
+        raw = parse_result.content
+        template? ? TemplateContext.load.render(raw) : raw
+      end
     end
 
     ##

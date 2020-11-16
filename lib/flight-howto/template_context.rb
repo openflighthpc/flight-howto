@@ -33,10 +33,14 @@ require 'yaml'
 module FlightHowto
   class TemplateContext < Hashie::Mash
     def self.load
-      Pathname.new(Config::CACHE.template_config_dir)
-              .children(false)
-              .sort
-              .each_with_object(new) { |p, memo| memo.load_config(p) }
+      if Dir.exists? Config::CACHE.template_config_dir
+        Pathname.new(Config::CACHE.template_config_dir)
+                .children(false)
+                .sort
+                .each_with_object(new) { |p, memo| memo.load_config(p) }
+      else
+        new
+      end
     end
 
     def load_config(pathname)
