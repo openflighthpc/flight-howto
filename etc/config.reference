@@ -54,6 +54,13 @@ config :howto_dir, default: File.join(flight_ROOT, 'usr/share/howto')
 config :minimum_terminal_width, default: 80, transform_with: ->(v) { v.to_i }
 
 # ==============================================================================
+# Template Config Directory
+# Specify the directory where templating configs are stored. The configs are
+# loaded in alphanumeric order
+# ==============================================================================
+config :template_config_dir, default: File.join(flight_ROOT, 'etc/howto.d')
+
+# ==============================================================================
 # Log Path
 # The file the logger will write to. It will write to standard error when set to
 # empty string.
