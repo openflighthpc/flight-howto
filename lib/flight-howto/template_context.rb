@@ -35,7 +35,7 @@ module FlightHowto
     def self.load
       if Dir.exists? Config::CACHE.template_config_dir
         Pathname.new(Config::CACHE.template_config_dir)
-                .children(false)
+                .children
                 .sort
                 .each_with_object(new) { |p, memo| memo.load_config(p) }
       else
@@ -48,7 +48,7 @@ module FlightHowto
 
       # Do not require the config to exist. Missing configs are considered as
       # good as empty. This allows load_config to be embedded in templates easily
-      return unless pathname.exists?
+      return unless pathname.exist?
 
       # Error if the requested config does not give an absolute path, it should
       # already be expanded
@@ -76,7 +76,37 @@ module FlightHowto
 
     def render(template)
       Bundler.with_original_env do
-        ERB.new(template, nil, '-').result(self.binding)
+        ERB.new(template, nil, '-').result(to_module.__binding__)
+      end
+    end
+
+    # Convert the context into a module which defines the top level
+    # keys as constants. This provides nice handling of capitalised keys
+    def to_module
+      Module.new do
+        class << self
+          attr_reader :context
+
+          # Do not error on missing constants
+          def const_missing(s)
+            nil
+          end
+        end
+      end.tap do |mod|
+        mod.instance_variable_set(:@context, self)
+        mod.context.each do |key, value|
+          # Skip keys which can not be constantized
+          next unless /\A[[:alpha:]]\w*\Z/.match?(key.to_s)
+
+          # Generate the constant key
+          const_key = key.to_s.upcase
+
+          # Do not redefine constants
+          next if mod.const_defined?(key)
+
+          # Define the constant
+          mod.const_set(const_key, value)
+        end
       end
     end
   end
