@@ -28,7 +28,7 @@
 require 'tty-pager'
 
 require_relative 'renderer'
-require_relative 'meta_regex'
+require_relative 'parser'
 
 module FlightHowto
   PREFIX_REGEX  = /\A(?<prefix>\d+)_(?<rest>.*)\Z/
@@ -111,35 +111,16 @@ module FlightHowto
     end
 
     def metadata
-      @metadata ||= read_metadata
+      parse_result.attributes
     end
 
-    ##
-    # Reads the guide without the metadata
-    def read_content
-      enum = File.read(path).each_line
-      memo = ''
-
-      begin
-        # Fast forward past the metadata block
-        enum.next while enum.peek[0] == ':'
-
-        # Skip a single trailing blank line
-        enum.next if enum.peek == "\n"
-
-        # Reform the remaining content
-        loop { memo = memo << enum.next }
-      rescue StopIteration
-        # NOOP
-      end
-
-      memo.force_encoding('UTF-8')
+    def content
+      parse_result.content
     end
 
     ##
     # Renders the markdown
     def render
-      content = read_content
       begin
         Renderer.new(content).wrap_markdown
       rescue => e
@@ -151,38 +132,8 @@ module FlightHowto
 
     private
 
-    ##
-    # Processes the metadata block at the start of each guide
-    def read_metadata
-      {}.tap do |meta|
-        File.open(path) do |file|
-          while (line = file.gets)[0] == ':'
-            if match = META_REGEX.match(line)
-              captures  = match.named_captures
-              key       = captures['key'].downcase.to_sym
-
-              if value = captures['single']
-                meta[key] = value.gsub("\'", "'")
-              elsif value = captures['double']
-                meta[key] = "\"#{value}\"".undump
-              elsif value = captures['value']
-                meta[key] = case value
-                            when 'true'
-                              true
-                            when 'false'
-                              false
-                            when /\d+/
-                              value.to_i
-                            else
-                              value
-                            end
-              else
-                meta[key] = nil
-              end
-            end
-          end
-        end
-      end
+    def parse_result
+      @parse_result ||= Parser.new.call(path)
     end
   end
 end
