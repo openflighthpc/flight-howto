@@ -53,7 +53,8 @@ module FlightHowto
       super
 
       # Standardizes the case and word boundaries
-      name = self.class.standardize_string(File.basename(path, '.*'))
+      basename = File.basename(path).sub(/\..*\Z/, '')
+      name = self.class.standardize_string(basename)
 
       # Detects if an prefix has been provided
       match = PREFIX_REGEX.match(name)
