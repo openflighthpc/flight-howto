@@ -130,7 +130,12 @@ module FlightHowto
     end
 
     def render_manpage
-      roff = Kramdown::Document.new(content, hard_wrap: false, input: 'GFM').to_man
+      html  = Kramdown::Document.new(content,
+                                     smart_quotes: ['apos', 'apos', 'quot', 'quot'],
+                                     typographic_symbols: { hellip: '...', ndash: '--', mdash: '--' },
+                                     hard_wrap: false,
+                                     input: 'GFM').to_html
+      roff  = Kramdown::Document.new(html, input: 'html').to_man
       out, errors, status = Open3.capture3(GROFF_CMD, stdin_data: roff, unsetenv_others: true, close_others: true)
 
       unless errors.empty?
