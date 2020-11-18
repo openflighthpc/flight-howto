@@ -26,12 +26,14 @@
 #==============================================================================
 
 require 'tty-pager'
+
 require_relative 'renderer'
+require_relative 'parser'
 
 module FlightHowto
-  Guide = Struct.new(:path) do
-    PREFIX_REGEX = /\A(?<prefix>\d+)_(?<rest>.*)\Z/
+  PREFIX_REGEX  = /\A(?<prefix>\d+)_(?<rest>.*)\Z/
 
+  Guide = Struct.new(:path) do
     ##
     # Used to convert strings into a standardized format. This provides case
     # and word boundary invariance. The standardization process will:
@@ -103,15 +105,22 @@ module FlightHowto
     end
 
     ##
-    # Reads the guides content
-    def read
-      File.read path
+    # Checks if the command is admin only by loading the metadata
+    def admin?
+      metadata[:admin] ? true : false
+    end
+
+    def metadata
+      parse_result.attributes
+    end
+
+    def content
+      parse_result.content
     end
 
     ##
     # Renders the markdown
     def render
-      content = read.force_encoding('UTF-8')
       begin
         Renderer.new(content).wrap_markdown
       rescue => e
@@ -119,6 +128,12 @@ module FlightHowto
         Config::CACHE.logger.warn e.full_message
         content
       end
+    end
+
+    private
+
+    def parse_result
+      @parse_result ||= Parser.new.call(path)
     end
   end
 end

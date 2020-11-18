@@ -41,7 +41,7 @@ module FlightHowto
         if $stdout.tty? && !options.no_pretty
           guide.render
         else
-          guide.read
+          guide.content
         end
       end
 
