@@ -39,13 +39,11 @@ module FlightHowto
     end
 
     # Define the name column (toggles on verbosity)
-    { header: 'Name', row_color: :cyan }.tap do |o|
-      register_column(verbose: true, **o) do |guide|
-        guide.parts.join('_')
-      end
-
-      register_column(verbose: false, **o) do |guide|
+    register_column(header: 'Name', row_color: :cyan) do |guide|
+      if $stdout.tty?
         guide.humanized_name
+      else
+        guide.parts.join('_')
       end
     end
 
