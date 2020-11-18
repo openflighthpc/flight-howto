@@ -94,7 +94,7 @@ module FlightHowto
     def picky
       @picky ||= begin
         index = Picky::Index.new :guides do
-          indexing splits_text_on: /\s/
+          indexing splits_text_on: /\W/
           category :content, partial: Picky::Partial::None.new
         end
         guides.each { |g| index.add g }
