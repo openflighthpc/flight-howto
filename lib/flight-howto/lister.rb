@@ -27,28 +27,33 @@
 
 require 'output_mode'
 require 'pathname'
-require 'pastel'
 
 module FlightHowto
   module Lister
     # Defines a handy interface for generating Tabulated data
     extend OutputMode::TLDR::Index
 
-    # Defines the columns to the output as a series of blocks
-    # Essentially each "callable" is a proc and a config rolled into a single object
-    register_callable(header: 'Index') do |guide|
-      # NOTE: The OutputMode library does not supprt *_with_index type notation
-      #       Instead the index needs to be cached on the object itself
-      $stdout.tty? ? pastel.yellow(guide.index) : guide.index
+    # Define the index column
+    register_column(header: 'Index', row_color: :yellow) do |guide|
+      guide.index
     end
-    register_callable(header: 'Name') do |guide|
+
+    # Define the name column (toggles on verbosity)
+    register_column(header: 'Name', row_color: :cyan) do |guide|
       if $stdout.tty?
-        pastel.cyan guide.humanized_name
+        guide.humanized_name
       else
         guide.parts.join('_')
       end
     end
-    register_callable(header: "File (Dir: #{Config::CACHE.howto_dir})", verbose: true) do |guide|
+
+    # Define the file column (toggles on verbosity)
+    register_column(header: "File (Dir: #{Config::CACHE.howto_dir})", verbose: true) do |guide|
+      # NOTE: This toggle does not work quite as expected with --ascii flag
+      #       The --ascii flag should give the humanized output in non-interactive terminals
+      #       However the flag is not available at this point in the code execution
+      #
+      #       Fixing this will require an additional feature in OutputMode
       if $stdout.tty?
         Pathname.new(guide.path).relative_path_from Config::CACHE.howto_dir
       else
@@ -56,8 +61,18 @@ module FlightHowto
       end
     end
 
-    def self.pastel
-      @pastel ||= Pastel.new
+    # NOTE: OutputMode now considers 'true' to be explicitly on and 'false' as explicit off
+    #       The default handling is trigged by `nil` (e.g. verbose: nil)
+    #
+    #       However Slop can not pass a nil values for boolean flags,
+    #       so there needs to be an adaptation layer between the two.
+    def self.build_output(verbose: false, ascii: false, interactive: false)
+      opts = {}.tap do |o|
+        o[:verbose]     = true  if verbose
+        o[:ascii]       = true  if ascii
+        o[:interactive] = true  if interactive || ascii
+      end
+      super(header_color: :clear, row_color: :clear, **opts)
     end
   end
 end

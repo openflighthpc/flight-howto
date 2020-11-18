@@ -27,6 +27,7 @@
 
 require_relative 'guide'
 require 'open3'
+require 'picky'
 
 module FlightHowto
   class Matcher
@@ -67,19 +68,40 @@ module FlightHowto
     end
 
     ##
-    # OBSOLETE: This method has reached EOL and is pending removal
-    def find_by_index(raw_index)
-      raise NotImplementedError
-    end
-
-    ##
-    # Filter the guides by a search key. Note: They key must already be standardized
-    def search(key)
+    # Filter the guides by name. Note the name must already be standardized
+    def search_name(key)
       regex = /\A#{key}.*/
       matching_guides = select do |guide|
         guide.parts.any? { |p| regex.match?(p)  }
       end
       self.class.new(matching_guides)
+    end
+
+    def search_content(key)
+      picky.search(key)
+           .ids
+           .map { |id| id_map[id] }
+           .sort_by(&:index)
+    end
+
+    private
+
+    def id_map
+      @id_map ||= guides.map { |g| [g.id, g] }.to_h
+    end
+
+    # Used to preform a search on the entire text body
+    def picky
+      @picky ||= begin
+        index = Picky::Index.new :guides do
+          indexing splits_text_on: /\W/
+          category :content, partial: Picky::Partial::None.new
+        end
+        guides.each { |g| index.add g }
+        Picky::Search.new index do
+          searching splits_text_on: /\s/
+        end
+      end
     end
   end
 end

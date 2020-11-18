@@ -59,15 +59,21 @@ module FlightHowto
       end
     end
 
+    global_slop.bool '--verbose', 'Display additional information'
+    global_slop.bool '--ascii', 'Display the uncolorized ASCII output'
+
     create_command 'list' do |c|
       c.summary = 'List available user guides'
-      c.slop.bool '--verbose', 'Display additional information'
     end
 
     create_command 'show', 'NAME...' do |c|
       c.summary = 'Search and display a user guide'
       c.slop.bool '--no-pager', 'Do not open in a pager', default: false
       c.slop.bool '--no-pretty', 'Display as raw markdown', default: false
+    end
+
+    create_command 'search', 'TERMS...' do |c|
+      c.summary = 'List guides which contain the given search terms'
     end
 
     alias_command 'ls', 'list'

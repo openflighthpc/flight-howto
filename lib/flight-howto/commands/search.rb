@@ -27,9 +27,9 @@
 
 module FlightHowto
   module Commands
-    class List < Command
+    class Search < Command
       def run
-        guides = Matcher.new.guides
+        guides = Matcher.new.search_content(args.join(' '))
         if guides.empty?
           $stderr.puts 'No guides found!'
         else
