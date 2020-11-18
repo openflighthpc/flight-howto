@@ -76,7 +76,7 @@ module FlightHowto
 
     def render(template)
       Bundler.with_original_env do
-        ERB.new(template, nil, '-').result(to_module.__binding__)
+        ERB.new(template, nil, '-').result(to_module.to_binding)
       end
     end
 
@@ -91,9 +91,14 @@ module FlightHowto
           def const_missing(s)
             nil
           end
+
+          def to_binding
+            class_eval('binding')
+          end
         end
       end.tap do |mod|
         mod.instance_variable_set(:@context, self)
+
         mod.context.each do |key, value|
           # Skip keys which can not be constantized
           next unless /\A[[:alpha:]]\w*\Z/.match?(key.to_s)
