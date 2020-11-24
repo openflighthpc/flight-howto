@@ -57,7 +57,21 @@ config :minimum_terminal_width, default: 80, transform_with: ->(v) { v.to_i }
 # Groff Rendering
 # Render the howto using groff instead of prettified markdown
 # ==============================================================================
-config :groff_render, default: ENV.fetch('flight_HOWTO_groff_render', false)
+config :groff_render, default: ENV.fetch('flight_HOWTO_groff_render', true),
+  transform_with: ->(v) {
+    false_values = [
+      nil, "",
+      false, 0,
+      "0", :"0",
+      "f", :f,
+      "F", :F,
+      "false", :false,
+      "FALSE", :FALSE,
+      "off", :off,
+      "OFF", :OFF,
+    ].freeze
+    !false_values.include?(v)
+  }
 
 # ==============================================================================
 # Template Config Directory
