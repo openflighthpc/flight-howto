@@ -45,7 +45,7 @@ module FlightHowto
     ##
     # Helper method for loading in all the guides
     def self.load_guides
-      Dir.glob(File.join(Config::CACHE.howto_dir, '*\.md'))
+      Dir.glob(File.join(Config::CACHE.howto_dir, '*{\.md,\.md\.erb}'))
          .map { |p| Guide.new(p) }
          .tap do |guides|
         guides.reject!(&:admin?) unless admin?

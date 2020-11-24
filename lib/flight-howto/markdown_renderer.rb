@@ -29,7 +29,7 @@ require_relative '../patches/tty-markdown'
 require 'word_wrap'
 
 module FlightHowto
-  Renderer = Struct.new(:content, :width) do
+  MarkdownRenderer = Struct.new(:content, :width) do
     attr_reader :colors
 
     def initialize(*_)
