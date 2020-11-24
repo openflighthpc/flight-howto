@@ -52,20 +52,21 @@ module FlightHowto
   InputError = GeneralError.define_class(3)
 
   ConfigLoadError = GeneralError.define_class(4)
+  RenderError = GeneralError.define_class(5)
 
-  InvalidFormatError = GeneralError.define_class(5) do
+  InvalidFormatError = GeneralError.define_class(6) do
     def initialize(content_filename)
       super("The file '#{content_filename}' appears to start with a metadata section (three or five dashes at the top) but it does not seem to be in the correct format.")
     end
   end
 
-  UnparseableMetadataError = GeneralError.define_class(6) do
+  UnparseableMetadataError = GeneralError.define_class(7) do
     def initialize(filename, error)
       super("Could not parse metadata for #{filename}: #{error.message}")
     end
   end
 
-  InvalidMetadataError = GeneralError.define_class(7) do
+  InvalidMetadataError = GeneralError.define_class(8) do
     def initialize(filename, klass)
       super("The file #{filename} has invalid metadata (expected key-value pairs, found #{klass} instead)")
     end
