@@ -130,13 +130,25 @@ module FlightHowto
     end
 
     def render_manpage
+      env = {
+        'PATH' => '/bin:/sbin:/usr/bin:/usr/sbin',
+        'HOME' => ENV['HOME'],
+        'USER' => ENV['USER'],
+        'LOGNAME' => ENV['LOGNAME'],
+      }
       html  = Kramdown::Document.new(content,
                                      smart_quotes: ['apos', 'apos', 'quot', 'quot'],
                                      typographic_symbols: { hellip: '...', ndash: '--', mdash: '--' },
                                      hard_wrap: false,
                                      input: 'GFM').to_html
       roff  = Kramdown::Document.new(html, input: 'html').to_man
-      out, errors, status = Open3.capture3(GROFF_CMD, stdin_data: roff, unsetenv_others: true, close_others: true)
+      out, errors, status = Open3.capture3(
+        env,
+        GROFF_CMD,
+        stdin_data: roff,
+        unsetenv_others: true,
+        close_others: true,
+      )
 
       unless errors.empty?
         Config::CACHE.logger.warn <<~WARN.chomp
