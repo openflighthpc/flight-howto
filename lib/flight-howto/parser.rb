@@ -88,7 +88,7 @@ module FlightHowto
     # @return [Hash]
     def parse_metadata(data, filename)
       begin
-        meta = YAML.load(data) || {}
+        meta = YAML.load(data, symbolize_names: true) || {}
       rescue => e
         raise UnparseableMetadataError.new(filename, e)
       end
